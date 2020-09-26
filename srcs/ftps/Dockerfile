@@ -12,4 +12,4 @@ RUN mv vsftpd.conf /etc/vsftpd/vsftpd.conf
 
 EXPOSE 20-21 20000-20001
 
-ENTRYPOINT ["/tmp/run.sh"]
+ENTRYPOINT ["/tmp/ftps_run.sh"]
