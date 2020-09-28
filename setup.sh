@@ -14,3 +14,9 @@ echo "
 # 이미지 생성
 echo "hello"
 # deployment 생성
+docker build -t service-mysql ./srcs/mysql/
+docker build -t service-phpmyadmin ./srcs/phpmyadmin/
+
+kubectl apply -f ./srcs/mysql/mysql.yaml
+kubectl apply -f ./srcs/phpmyadmin/phpmyadmin.yaml
+

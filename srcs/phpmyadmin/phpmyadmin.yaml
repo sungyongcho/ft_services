@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: phpmyadmin
+  labels:
+    app: phpmyadmin
+spec:
+  selector:
+    app: phpmyadmin
+  type: LoadBalancer
+  ports:
+    - port: 5000
+      name: phpmyadmin
+      targetPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phpmyadmin
+  labels:
+    app: phpmyadmin
+spec:
+  selector:
+    matchLabels:
+      app: phpmyadmin
+  replicas: 1
+  template:
+    metadata:
+      name: phpmyadmin
+      labels:
+        app: phpmyadmin
+    spec:
+      containers:
+        - name: phpmyadmin
+          image: service-phpmyadmin
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: phpmyadmin-config
+              subPath: config.inc.php
+              mountPath: /www/config.inc.php
+              readOnly: true
+      volumes:
+        - name: phpmyadmin-config
+          configMap:
+            name: phpmyadmin
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: phpmyadmin
+  labels:
+    app: phpmyadmin
+data:
+  config.inc.php: |
+    <?php
+    /**
+     * phpMyAdmin sample configuration, you can use it as base for
+     * manual configuration. For easier setup you can use setup/
+     *
+     * All directives are explained in documentation in the doc/ folder
+     * or at <https://docs.phpmyadmin.net/>.
+     *
+    * @package PhpMyAdmin
+     */
+
+    /**
+     * This is needed for cookie based authentication to encrypt password in
+     * cookie. Needs to be 32 chars long.
+     */
+    $cfg['blowfish_secret'] = '01234567890123456789012345678912'; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */
+
+    /**
+     * Servers configuration
+     */
+    $i = 0;
+
+    /**
+     * First server
+     */
+    $i++;
+
+    /* Authentication type */
+    $cfg['Servers'][$i]['auth_type'] = 'cookie';
+
+    /* Server parameters */
+    $cfg['Servers'][$i]['host'] = 'mysql';
+    $cfg['Servers'][$i]['port'] = '3306';
+    $cfg['Servers'][$i]['user'] = 'admin';
+    $cfg['Servers'][$i]['password'] = 'password';
+    $cfg['Servers'][$i]['compress'] = 'false';
+    $cfg['Servers'][$i]['AllowNoPassword'] = 'true';
+
+    /**
+     * Directories for saving/loading files from server
+     */
+    $cfg['UploadDir'] = '';
+    $cfg['SaveDir'] = '';
