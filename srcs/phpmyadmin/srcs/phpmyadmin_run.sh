@@ -8,6 +8,6 @@ tar -xvf /tmp/phpMyAdmin-${PHPMYADMIN_VER}-all-languages.tar.gz -C /www
 cp -r /www/phpMyAdmin-${PHPMYADMIN_VER}-all-languages/* /www/
 rm -r /www/phpMyAdmin-${PHPMYADMIN_VER}-all-languages
 
-chown 777 -R /www/
+chmod 777 -R /www/
 
 php -S 0.0.0.0:5000 -t /www/

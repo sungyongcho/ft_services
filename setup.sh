@@ -16,7 +16,13 @@ echo "hello"
 # deployment 생성
 docker build -t service-mysql ./srcs/mysql/
 docker build -t service-phpmyadmin ./srcs/phpmyadmin/
+docker build -t service-wordpress ./srcs/wordpress/
+docker build -t service-influxdb ./srcs/influxdb/
+docker build -t service-grafana ./srcs/grafana/
 
 kubectl apply -f ./srcs/mysql/mysql.yaml
+kubectl apply -f ./srcs/mysql/mysql_telegraf.yaml
 kubectl apply -f ./srcs/phpmyadmin/phpmyadmin.yaml
-
+kubectl apply -f ./srcs/wordpress/wordpress.yaml
+kubectl apply -f ./srcs/influxdb/influxdb.yaml
+kubectl apply -f ./srcs/grafana/grafana.yaml
