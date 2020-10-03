@@ -28,9 +28,6 @@ spec:
           subPath: influxdb.conf
           mountPath: /etc/influxdb.conf
           readOnly: true
-        envFrom:
-        - secretRef:
-            name: influxdb-secret
       volumes:
       - name: influxdb-pv-claim
         persistentVolumeClaim:

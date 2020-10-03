@@ -19,7 +19,7 @@ spec:
         imagePullPolicy: Never
         volumeMounts:
           - name: grafana-config
-            mountPath: /usr/grafana.ini
+            mountPath: /etc/grafana.ini
             subPath: grafana.ini
       volumes:
       - name: grafana-config
@@ -35,6 +35,7 @@ metadata:
 spec:
   selector:
     app: grafana
+  type: LoadBalancer
   ports:
   - port: 3000
     targetPort: 3000

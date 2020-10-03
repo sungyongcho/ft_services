@@ -1,0 +1,14 @@
+apiVersion: 1
+datasources:
+- name: InfluxDB ##dashboard 에서 읽어올때 기본이름이 대문자로 찍혀있어야 읽히게 되있어서 부득이 대문자로 변경...
+  orgId: 1
+  type: influxdb
+  access: proxy
+  url: http://influxdb:8086
+  database: telegraf
+  isDefault: false
+  version: 1
+  editable: false
+  basicAuth: true
+  basicAuthUser: admin
+  basicAuthPassword: password

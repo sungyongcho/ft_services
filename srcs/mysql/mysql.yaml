@@ -23,20 +23,10 @@ spec:
           volumeMounts:
           - name: mysql-data
             mountPath: /var/lib/mysql/
-          - name: telegraf-config
-            subPath: telegraf.conf
-            mountPath: /etc/telegraf/telegraf.conf
-            readOnly: true
-          envFrom:
-            - secretRef:
-                name: telegraf-secret
       volumes:
         - name: mysql-data
           persistentVolumeClaim:
             claimName: mysql-pv-claim
-        - name: telegraf-config
-          configMap:
-            name: telegraf-config
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

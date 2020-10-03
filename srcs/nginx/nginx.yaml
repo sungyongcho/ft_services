@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  - port: 443
+    targetPort: 443
+    protocol: TCP
+    name: https
+  - port: 22
+    targetPort: 22
+    name: ssh
+  selector:
+    app: nginx
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+      - name: secret-volumes
+        secret:
+          secretName: nginx-secret
+      - name: configmap-volumes
+        configMap:
+          name: nginx-configmap
+      - name: proxy-volumes
+        configMap:
+          name: nginxproxy
+      containers:
+      - name: nginx
+        image: service-nginx
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        - containerPort: 22
+        volumeMounts:
+        - mountPath: /etc/nginx/ssl
+          name: secret-volumes
+        - mountPath: /etc/nginx/conf.d
+          name: configmap-volumes
+        livenessProbe:
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          tcpSocket:
+            port: 22
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nginx-secret
+  namespace: default
+type: kubernetes.io/tls
+data:
+  tls.crt: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURMVENDQWhXZ0F3SUJBZ0lVRGFvVzgrQ0FiWTR1SWFOaGF2Tm43ZjJIVm9Vd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0pqRVJNQThHQTFVRUF3d0libWRwYm5oemRtTXhFVEFQQmdOVkJBb01DRzVuYVc1NGMzWmpNQjRYRFRJdwpNRGN3TVRFeU1UUXhOVm9YRFRJeE1EY3dNVEV5TVRReE5Wb3dKakVSTUE4R0ExVUVBd3dJYm1kcGJuaHpkbU14CkVUQVBCZ05WQkFvTUNHNW5hVzU0YzNaak1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0MKQVFFQXpucHBiWjVTYlBEcjhpL3VwcEpIZmloRzlpTmlQalhLcHJQeThCbWxvTXJNejJJQW9jc0V4elhUNTJlWgpVeklvZGpQelk1RlJiTkZia1Y4ODNGYUpGZEU5aFVKTE80NDBxOHZKc2pjTkR0eWR2V0cyZVNmREduZHdwcU5jCjZPV0kzREtXSTJjazNqRDk3T0haeUtrZUtLcnR4R1ZNQ1F1V3Z4ZlBXUVlHVjgzd0I5MVlCK1pEdEdmYnF3M1cKYmRUcUdhWGNMaU9KM0ZmUVFVN3ZHMVZUOGR1dGdZNVNZeWdKbXRqWVczamU0K0UxYWs3cnVTdTJpOGlFMmhvNApRc1IwcmxHSXJNemlHcTFOMXJ6MHZzQUYzZm9UUlhoZWdkRUVjNDl3L3NZMGloY3dXNXdVTUpIdjVwS2dWbE9sClQvT3QvWnppYUZuV2FRcFhERXVYa0lGaS9RSURBUUFCbzFNd1VUQWRCZ05WSFE0RUZnUVVWdmRMTXNUUEVRVkMKakF4TzdqaWdBT2tGQlFrd0h3WURWUjBqQkJnd0ZvQVVWdmRMTXNUUEVRVkNqQXhPN2ppZ0FPa0ZCUWt3RHdZRApWUjBUQVFIL0JBVXdBd0VCL3pBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQVN1U2Y1d1pnSEV2U2NPL3JqaithCjc1NVNpNUtuT090TlRNMGtVbXRjcUxIRnNRNTZKM2FkbDdhRjBaY0VUMmJ2Z2NucWN4dmJwekwxQWdmQUFORzYKZTZYZWx5MEJUQ2JjUWV3emJFNW1WazdCZ1dkeVdCVGxkbWFUOG9QMFgrS0dKaHFiWFB1T0NiVmIvZlZ1TFBYVQpnai9xNmtQaU9ueGhrejJCaVk5SllvUmZGUXY3VGFGZkl0RkdlcTBMeXZ0L0J2WlIzbDgzZzBXQ2lEQ3VtS1NGClhoVVpiTndpejhFT3A2TDgwVlIzNzlWOE04NXpOS0FqdGpRdEVOSHdKUWtOTFNIdVNyZ3VuVG9sWE9vWmhjUzEKVkFlUlhlbkFia2tHQXJLbWtFTnJMbzV6a096WURvZGxrYmphWFc2dTMzeFlld1NmaGtHOGdrMTVSYS81VFlPLwpmUT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
+  tls.key: "LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2UUlCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktjd2dnU2pBZ0VBQW9JQkFRRE9lbWx0bmxKczhPdnkKTCs2bWtrZCtLRWIySTJJK05jcW1zL0x3R2FXZ3lzelBZZ0NoeXdUSE5kUG5aNWxUTWloMk0vTmprVkZzMFZ1UgpYenpjVm9rVjBUMkZRa3M3ampTcnk4bXlOdzBPM0oyOVliWjVKOE1hZDNDbW8xem81WWpjTXBZalp5VGVNUDNzCjRkbklxUjRvcXUzRVpVd0pDNWEvRjg5WkJnWlh6ZkFIM1ZnSDVrTzBaOXVyRGRadDFPb1pwZHd1STRuY1Y5QkIKVHU4YlZWUHgyNjJCamxKaktBbWEyTmhiZU43ajRUVnFUdXU1SzdhTHlJVGFHamhDeEhTdVVZaXN6T0lhclUzVwp2UFMrd0FYZCtoTkZlRjZCMFFSemozRCt4alNLRnpCYm5CUXdrZS9ta3FCV1U2VlA4NjM5bk9Kb1dkWnBDbGNNClM1ZVFnV0w5QWdNQkFBRUNnZ0VCQU1NcFR5ZHVneWczbkR6aGMyaDhVUmo4aHY0MXViRmxkTE9XMlNSNmlXUHUKN0NHRTEyWVdGK0VYanNCbDJyV1pia2N6bVhUZU1TRnl6V01kcXMvMDkwUG83NFphZi9POTJTa2N5UHNyTDZ1QgplWk04blpYc3NHdit3enF1cEszNTd4OTZyUkN2ZUZpUDVDTVg0cHJZeHduWGJqKzVJMkpWVXRveWJpa09HY2E0CnpPSloyUXlCekloam1wdFh0dWpGeEVVYW1KQkxEaytFWFdUR2dYVUgrMnhiTkFsQWJncXk4dENKMnY1Zko2RE4KSnk2OUJLdnpRNm9ZcjkxbnBuVTN6ZGQ1UmRZY2xQMjNhOGsxZ01WL0NsaVY0eXV6UEtzT1B0MTlua2VSbEg5dApkS3Z4ZnVibXpkcWl3dUlIeTBDOWswQ1czcGZlVjk4Y3RFQ0lwZ2c2NEVFQ2dZRUE2U3lWcEpURmlrbVdYUWRuClFGbnkybU1Sd0VROFIxQ0dzc3RubFQ1T2k5cUZPZHV0eVhqenVZcTluNmQzNTU2YmVkY2hxbHV4M3hGYXpDd2IKQ1Zvai80a3dFY0o3VUFSeFBWMnZhaGVjZnkrVGMrZGZLamlWMW9JL0pNQi9mZE13ZnRIWmV6RnpwNmFJRGx3Ygp3RGVJMjBhRlY1eHF4M3BVUkJYdjJVRmUrakVDZ1lFQTRyRFJWYStDNVhpV2dqb0dvUTFXbEJpeGlRUnpBajlOCklTUm9SaExrOTBzZk9JTGtVYlNpNStBbDBkWFFFVnhKemJGdmdVTExwbXJnTktDUExOOHZ4bk5hblVQaGVJVlAKeEZpUWh3NjBlUTZxdnpkQjlxbUU3cEtyTW8yN2FKQ3FaYU8wWEhOdEVKc09xdStHTlZlSFJ0b0RSRExsYU5oLwo3aG9RdDA4UGRvMENnWUJ6a3luSkhnU2Irc1dRN3U1NnN4cndyRkpNSG9aU1F0UEJJNWtBSEpZS05CSDlENm9nClJ0ZG5qQ0ZaVlVUVmhZUkM3Q00vc1p1RW1iR0xxZ0RzcmNWU0Q4bkh3OElqYzFBOXZvWUg3QlFoNW84TDBBOFgKZWx5cXFueHAxeEJhYWFlTDlLLzdwQk5UY2ZQV1NrbG5DUi9Jc0RlL3FVUTBBNnBvNVFheGhQbHl3UUtCZ0VoMwpLWlB3bFRGeHlQczhQVjVDZTBqQVZCQnU0YXo0TzFtNjM3SjIyOGJKdHVORHhHVHlENWw4SjlyYU5MYzMvMGZICnp0Tk5YUGlIOWNBZEMyZld1TmtCaXhmMjJSN0R6dW4vUGNST3lSWmh2K2Q4YkpQRFFRRmExV3RGcjRFUHJjanIKK2Y0THovT2MvYVZiQ0ZZSTh1K05SYm9KWXhpUERPWTZZdG1XWm1VSkFvR0FEeldvY3U1bGNwMm1QeWY3U0I0cgpaMTNSSGhxTkl4eDlLazA1YmdXdHR6eFdCUk1oZnl2SC9xRzhmZGtOU0hueHE5S3JhbWZyNFlWMXk1S0xWZFcrCmFyKy9CN1I0bFR0N0pvTlpRelAxU0tacWpZUW1tb2tVTzA5WVBBVUhNTXQ5cHF5QnNKOGRIWU9rQVQxeE9aWlkKaWhzWlFNMUIvK3hYaFFCN1FPWkRrQnM9Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K"
