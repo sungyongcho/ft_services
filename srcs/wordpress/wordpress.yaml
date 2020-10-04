@@ -11,7 +11,7 @@ spec:
   ports:
     - port: 5050
       name: wordpress
-      targetPort: 5050
+      targetPort: 80
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -75,8 +75,8 @@ data:
       */
 
       /** SETTINGS -- added by sucho**/
-      define( 'WP_SITEURL',       '/wordpress'  );
-      define( 'WP_HOME',          '/wordpress'  );
+      define( 'WP_SITEURL',       '/wordpress/'  );
+      define( 'WP_HOME',          '/wordpress/'  );
 
 
       // ** MySQL settings - You can get this info from your web host ** //
@@ -139,14 +139,13 @@ data:
       * @link https://codex.wordpress.org/Debugging_in_WordPress
       */
 
-      define( 'WP_DEBUG', false );
-
-      /** Absolute path to the WordPress directory. */
-      if ( ! defined( 'ABSPATH' ) ) {
-        define( 'ABSPATH', __DIR__ . '/' );
+      define( 'WP_DEBUG', false  );
+      if ( ! defined( 'ABSPATH'  )  ) {
+        define( 'ABSPATH', __DIR__ . '/'  );
       }
-
-      /** Sets up WordPress vars and included files. */
       require_once ABSPATH . 'wp-settings.php';
+      if ( ! empty( $_SERVER['HTTP_X_FORWARDED_HOST']  )  ) {
+        $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
+      }
 
       /* That's all, stop editing! Happy publishing. */
