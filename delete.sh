@@ -1,6 +1,8 @@
 ## delete dashboard
+
 kubectl delete -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.4/aio/deploy/recommended.yaml
 ## delete metallb
+kubectl delete -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
 kubectl delete -f https://raw.githubusercontent.com/google/metallb/v0.8.1/manifests/metallb.yaml
 kubectl delete -f ./srcs/metallb_config.yaml
 

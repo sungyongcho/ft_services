@@ -74,9 +74,10 @@ data:
       * @package WordPress
       */
 
-      /** NGINX REVERSE PROXY SETTINGS -- added by sucho**/
-      define( 'WP_SITEURL',       '/wordpress/'  );
-      define( 'WP_HOME',          '/wordpress/'  );
+      /** SETTINGS -- added by sucho**/
+      define( 'WP_SITEURL',       '/wordpress'  );
+      define( 'WP_HOME',          '/wordpress'  );
+
 
       // ** MySQL settings - You can get this info from your web host ** //
       /** The name of the database for WordPress */
@@ -137,9 +138,8 @@ data:
       *
       * @link https://codex.wordpress.org/Debugging_in_WordPress
       */
-      define( 'WP_DEBUG', false );
 
-      /* That's all, stop editing! Happy publishing. */
+      define( 'WP_DEBUG', false );
 
       /** Absolute path to the WordPress directory. */
       if ( ! defined( 'ABSPATH' ) ) {
@@ -147,4 +147,6 @@ data:
       }
 
       /** Sets up WordPress vars and included files. */
-      require_once( ABSPATH . 'wp-settings.php' );
+      require_once ABSPATH . 'wp-settings.php';
+
+      /* That's all, stop editing! Happy publishing. */

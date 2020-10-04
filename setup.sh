@@ -17,7 +17,7 @@ sh ./srcs/update_packages.sh
 
 #kubernetes dashboard
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.4/aio/deploy/recommended.yaml
-kubectl proxy &
+kubectl proxy & # & <-role of ampersand!!!
 sleep 3
 echo "access to below address with following token (str8 copy and paste)"
 echo "=====================token==================="
@@ -43,7 +43,14 @@ docker build -t service-telegraf ./srcs/telegraf/
 echo "image built succesfully."
 
 # MetalLB
-kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.1/manifests/metallb.yaml
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+sed -e "s/strictARP: false/strictARP: true/" | \
+kubectl diff -f - -n kube-system
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+sed -e "s/strictARP: false/strictARP: true/" | \
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
+kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 kubectl apply -f ./srcs/metallb_config.yaml
 
 # for cluster
@@ -64,6 +71,9 @@ echo "
 | | | |/ _ \ \___ \| |_| |  _ \| | | |/ _ \ | |_) | | | |
 | |_| / ___ \ ___) |  _  | |_) | |_| / ___ \|  _ <| |_| |
 |____/_/   \_\____/|_| |_|____/ \___/_/   \_\_| \_\____/
+"
+echo
+"
  ____  _____ __  __ ___ _   _ ____  _____ ____
 |  _ \| ____|  \/  |_ _| \ | |  _ \| ____|  _ \
 | |_) |  _| | |\/| || ||  \| | | | |  _| | |_) |
