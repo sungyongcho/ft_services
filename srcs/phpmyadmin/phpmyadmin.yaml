@@ -44,12 +44,12 @@ spec:
       volumes:
         - name: phpmyadmin-config
           configMap:
-            name: phpmyadmin
+            name: phpmyadmin-config
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: phpmyadmin
+  name: phpmyadmin-config
   labels:
     app: phpmyadmin
 data:
@@ -97,3 +97,4 @@ data:
      */
     $cfg['UploadDir'] = '';
     $cfg['SaveDir'] = '';
+    $cfg['PmaAbsoluteUri'] = '/phpmyadmin/';
