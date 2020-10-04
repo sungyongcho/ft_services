@@ -13,10 +13,6 @@ kubectl delete --all secret
 kubectl delete --all configmap
 kubectl delete --all pv,pvc
 
-## minikube
-minikube stop
-minikube delete
-
 ##delete all docker images && containers (in case)
 docker rmi $(docker images -q)
 docker stop $(docker ps -a -q)
