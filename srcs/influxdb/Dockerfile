@@ -1,10 +1,10 @@
 FROM alpine:latest
 
-COPY ./srcs/* /tmp/
-RUN chmod 777 -R /tmp/*
+RUN apk update && apk add influxdb --no-cache --quiet
 
-RUN apk update && apk add openrc influxdb --no-cache --quiet
+RUN mkdir -p /etc/influxdb
+RUN mkdir -p /var/lib/influxdb
 
 EXPOSE 8086
 
-ENTRYPOINT ["/tmp/influxdb_run.sh"]
+ENTRYPOINT ["/usr/sbin/influxd"]
