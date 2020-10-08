@@ -8,6 +8,7 @@ spec:
   selector:
     app: phpmyadmin
   type: LoadBalancer
+  loadBalancerIP: 192.168.99.102
   ports:
     - port: 5000
       name: phpmyadmin

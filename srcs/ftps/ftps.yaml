@@ -19,11 +19,19 @@ spec:
       - name: ftps
         image: service-ftps
         imagePullPolicy: Never
+        volumeMounts:
+          - name: ftps-config
+            mountPath: /etc/vsftpd/vsftpd.conf
+            subPath: vsftpd.conf
         ports:
         - containerPort: 20
         - containerPort: 21
         - containerPort: 20000
         - containerPort: 20001
+      volumes:
+        - name: ftps-config
+          configMap:
+            name: ftps-config
 ---
 apiVersion: v1
 kind: Service
@@ -33,6 +41,7 @@ metadata:
     app: ftps
 spec:
   type: LoadBalancer
+  loadBalancerIP: 192.168.99.101
   selector:
     app: ftps
   ports:
@@ -48,3 +57,65 @@ spec:
   - name: pftp-data-1
     port: 20001
     targetPort: 20001
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ftps-config
+data:
+  vsftpd.conf: |
+    # ################
+    # General Settings
+    # ################
+    listen=YES
+    listen_port=21
+    listen_ipv6=NO
+    write_enable=YES
+    # ##################
+    # Connection Setting
+    # ##################
+    local_enable=YES
+    force_local_data_ssl=YES
+    force_local_logins_ssl=YES
+    pam_service_name=vsftpd
+    ssl_enable=YES
+    # ############
+    # Mode Setting
+    # ############
+    port_enable=NO
+    # connect_from_port_20=YES
+    # ftp_data_port=20
+    pasv_enable=YES
+    seccomp_sandbox=NO
+    pasv_address=ftps
+    pasv_min_port=20000
+    pasv_max_port=20001
+    # ##################
+    # Permission Setting
+    # ##################
+    local_umask=022
+    # ################
+    # Security Setting
+    # ################
+    chroot_local_user=YES
+    # ############
+    # Log Settings
+    # ############
+    xferlog_enable=YES
+    xferlog_std_format=NO
+    xferlog_file=/var/log/vsftpd.log
+    # ######################
+    # Anonymous User Setting
+    # ######################
+    anonymous_enable=NO
+    allow_anon_ssl=NO
+    # ###
+    # etc
+    # ###
+    # isolate_network=NO
+    require_ssl_reuse=NO
+    validate_cert=YES
+    allow_writeable_chroot=YES
+    log_ftp_protocol=YES
+    rsa_cert_file=/etc/ssl/certs/vsftpd.crt
+    rsa_private_key_file=/etc/ssl/private/vsftpd.key

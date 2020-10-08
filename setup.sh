@@ -54,6 +54,7 @@ kubectl apply -f ./srcs/metallb_config.yaml
 
 # for cluster
 kubectl create configmap nginx-configmap --from-file=./srcs/nginx/srcs/default.conf --from-file=./srcs/nginx/srcs/proxy.conf
+kubectl apply -f ./srcs/nginx/nginx-ssh-configmap.yaml
 kubectl apply -f ./srcs/nginx/nginx.yaml
 kubectl apply -f ./srcs/ftps/ftps.yaml
 kubectl apply -f ./srcs/mysql/mysql.yaml
@@ -64,21 +65,7 @@ kubectl apply -f ./srcs/influxdb/influxdb_conf.yaml
 kubectl apply -f ./srcs/grafana/grafana.yaml
 kubectl apply -f ./srcs/telegraf/telegraf.yaml
 
-echo "
- ____    _    ____  _   _ ____   ___    _    ____  ____
-|  _ \  / \  / ___|| | | | __ ) / _ \  / \  |  _ \|  _ \\
-| | | |/ _ \ \___ \| |_| |  _ \| | | |/ _ \ | |_) | | | |
-| |_| / ___ \ ___) |  _  | |_) | |_| / ___ \|  _ <| |_| |
-|____/_/   \_\____/|_| |_|____/ \___/_/   \_\_| \_\____/
-"
-echo
-"
- ____  _____ __  __ ___ _   _ ____  _____ ____
-|  _ \| ____|  \/  |_ _| \ | |  _ \| ____|  _ \\
-| |_) |  _| | |\/| || ||  \| | | | |  _| | |_) |
-|  _ <| |___| |  | || || |\  | |_| | |___|  _ <
-|_| \_\_____|_|  |_|___|_| \_|____/|_____|_| \_\\
-"
+
 echo "=====================token==================="
 echo "access to below address with following token (str8 copy and paste)"
 echo "=====================token==================="

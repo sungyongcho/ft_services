@@ -8,6 +8,6 @@ RUN apk update && apk add openrc nginx openssh --no-cache --quiet
 RUN mkdir -p /run/nginx
 RUN mv /tmp/index.html /var/www/localhost/htdocs/
 
-EXPOSE 80 443 22
+EXPOSE 80 443 2020
 
 ENTRYPOINT [ "/tmp/nginx_run.sh" ]
