@@ -1,6 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    metallb.universe.tf/allow-shared-ip: shared
   name: wordpress
   labels:
     app: wordpress
@@ -8,7 +10,6 @@ spec:
   selector:
     app: wordpress
   type: LoadBalancer
-  loadBalancerIP: 192.168.99.103
   ports:
     - port: 5050
       name: wordpress
@@ -75,8 +76,8 @@ data:
     * @package WordPress
     */
 
-    define( 'WP_SITEURL',       '/wordpress/'  );
-    define( 'WP_HOME',          '/wordpress/'  );
+    define( 'WP_SITEURL',       'http://nginx:5050/'  );
+    define( 'WP_HOME',          'http://nginx:5050/'  );
 
     // ** MySQL settings - You can get this info from your web host ** //
     /** The name of the database for WordPress */
