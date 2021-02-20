@@ -11,9 +11,11 @@ spec:
     app: wordpress
   type: LoadBalancer
   ports:
-    - port: 5050
-      name: wordpress
-      targetPort: 5050
+  - port: 5050
+    name: wordpress
+    targetPort: 5050
+    protocol: TCP
+    name: http
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -76,8 +78,8 @@ data:
     * @package WordPress
     */
 
-    define( 'WP_SITEURL',       'http://nginx:5050/'  );
-    define( 'WP_HOME',          'http://nginx:5050/'  );
+    define( 'WP_SITEURL',       '/'  );
+    define( 'WP_HOME',          '/'  );
 
     // ** MySQL settings - You can get this info from your web host ** //
     /** The name of the database for WordPress */
