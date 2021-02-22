@@ -7,7 +7,6 @@ kubectl delete -f https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manif
 kubectl delete -f ./srcs/metallb_config.yaml
 
 ## delete all components
-kubectl delete --all pod
 kubectl delete --all deployment
 kubectl delete --all services
 kubectl delete --all secret

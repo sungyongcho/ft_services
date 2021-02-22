@@ -36,14 +36,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    metallb.universe.tf/allow-shared-ip: shared
   name: ftps
   labels:
     app: ftps
 spec:
   type: LoadBalancer
-  loadBalancerIP: 192.168.99.100
+  loadBalancerIP: 192.168.99.101
   selector:
     app: ftps
   ports:
