@@ -7,8 +7,8 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=KO/ST=Seoul/L=Gaep
 
 mkdir -p /var/ftp
 
-adduser -D -h /var/ftp sucho
-echo "sucho:sucho" | chpasswd
+adduser -D -h /var/ftp admin
+echo "admin:password" | chpasswd
 
 rc-status && touch /run/openrc/softlevel && rc-service vsftpd start
 
