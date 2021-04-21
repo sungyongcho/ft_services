@@ -30,14 +30,14 @@ echo "http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/http
 echo "============================================="
 
 # build images
-# docker build -t service-nginx ./srcs/nginx/
+docker build -t service-nginx ./srcs/nginx/
 docker build -t service-ftps ./srcs/ftps/
-# docker build -t service-mysql ./srcs/mysql/
-# docker build -t service-phpmyadmin ./srcs/phpmyadmin/
-# docker build -t service-wordpress ./srcs/wordpress/
-# docker build -t service-influxdb ./srcs/influxdb/
-# docker build -t service-grafana ./srcs/grafana/
-# docker build -t service-telegraf ./srcs/telegraf/
+docker build -t service-mysql ./srcs/mysql/
+docker build -t service-phpmyadmin ./srcs/phpmyadmin/
+docker build -t service-wordpress ./srcs/wordpress/
+docker build -t service-influxdb ./srcs/influxdb/
+docker build -t service-grafana ./srcs/grafana/
+docker build -t service-telegraf ./srcs/telegraf/
 
 echo "image built succesfully."
 
@@ -53,17 +53,17 @@ kubectl create secret generic -n metallb-system memberlist --from-literal=secret
 kubectl apply -f ./srcs/metallb_config.yaml
 
 # for cluster
-# kubectl create configmap nginx-configmap --from-file=./srcs/nginx/srcs/default.conf --from-file=./srcs/nginx/srcs/proxy.conf
-# kubectl apply -f ./srcs/nginx/nginx-ssh-configmap.yaml
-# kubectl apply -f ./srcs/nginx/nginx.yaml
+kubectl create configmap nginx-configmap --from-file=./srcs/nginx/srcs/default.conf --from-file=./srcs/nginx/srcs/proxy.conf
+kubectl apply -f ./srcs/nginx/nginx-ssh-configmap.yaml
+kubectl apply -f ./srcs/nginx/nginx.yaml
 kubectl apply -f ./srcs/ftps/ftps.yaml
-# kubectl apply -f ./srcs/mysql/mysql.yaml
-# kubectl apply -f ./srcs/phpmyadmin/phpmyadmin.yaml
-# kubectl apply -f ./srcs/wordpress/wordpress.yaml
-# kubectl apply -f ./srcs/influxdb/influxdb.yaml
-# kubectl apply -f ./srcs/influxdb/influxdb_conf.yaml
-# kubectl apply -f ./srcs/grafana/grafana.yaml
-# kubectl apply -f ./srcs/telegraf/telegraf.yaml
+kubectl apply -f ./srcs/mysql/mysql.yaml
+kubectl apply -f ./srcs/phpmyadmin/phpmyadmin.yaml
+kubectl apply -f ./srcs/wordpress/wordpress.yaml
+kubectl apply -f ./srcs/influxdb/influxdb.yaml
+kubectl apply -f ./srcs/influxdb/influxdb_conf.yaml
+kubectl apply -f ./srcs/grafana/grafana.yaml
+kubectl apply -f ./srcs/telegraf/telegraf.yaml
 
 
 echo "=====================token==================="

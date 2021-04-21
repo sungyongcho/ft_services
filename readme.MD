@@ -9,3 +9,7 @@
 		                            - by sucho
                             (sucho@student.42seoul.kr)
 ```
+
+two days after i got corrected, the subject has changed
+if you just copy & paste, you'd mos def fail the project... fyi...
+have fun ;)
